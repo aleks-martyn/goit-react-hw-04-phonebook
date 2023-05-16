@@ -6,7 +6,9 @@ import { ContactList } from './ContactList';
 import { Container } from './App.styled';
 
 export const App = () => {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(
+    () => JSON.parse(localStorage.getItem('contacts')) ?? []
+  );
   const [filter, setFilter] = useState('');
 
   const formSubmitHandler = formData => {
@@ -28,12 +30,27 @@ export const App = () => {
     setFilter(event.currentTarget.value);
   };
 
+  const getFilteredContacts = () => {
+    const normalizedFilter = filter.toLowerCase();
+
+    return contacts.filter(({ name }) =>
+      name.toLowerCase().includes(normalizedFilter)
+    );
+  };
+
+  const deleteContact = contactId => {
+    setContacts(prev => prev.filter(({ id }) => id !== contactId));
+  };
+
+  const filteredContacts = getFilteredContacts();
+
   return (
     <Container>
       <h1>Phonebook</h1>
       <ContactForm onSubmit={formSubmitHandler} />
       <h2>Contacts</h2>
       <Filter value={filter} onChange={changeFilter} />
+      <ContactList users={filteredContacts} onDeleteContact={deleteContact} />
     </Container>
   );
 };
