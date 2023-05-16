@@ -10,14 +10,22 @@ export const ContactForm = () => {
   const nameInputId = shortid.generate();
   const numberInputId = shortid.generate();
 
+  handleSubmit = event => {
+    event.preventDefault();
+    props.onSubmit(state);
+    reset();
+  };
+
   return (
-    <Form>
+    <Form onSubmit={handleSubmit}>
       <FormLabel htmlFor={nameInputId}>
         <span>Name</span>
       </FormLabel>
       <FormLabel htmlFor={numberInputId}>
         <span>Number</span>
       </FormLabel>
+
+      <button type="submit">Add contact</button>
     </Form>
   );
 };
