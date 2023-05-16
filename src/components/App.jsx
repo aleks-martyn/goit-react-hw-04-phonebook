@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import shortid from 'shortid';
 import { ContactForm } from './ContactForm';
 import { Filter } from './Filter';
 import { ContactList } from './ContactList';
 import { Container } from './App.styled';
 
+const LOCALSTORAGE_KEY = 'contacts';
+
 export const App = () => {
   const [contacts, setContacts] = useState(
-    () => JSON.parse(localStorage.getItem('contacts')) ?? []
+    () => JSON.parse(window.localStorage.getItem(LOCALSTORAGE_KEY)) ?? []
   );
   const [filter, setFilter] = useState('');
+
+  useEffect(() => {
+    window.localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(contacts));
+  }, [contacts]);
 
   const formSubmitHandler = formData => {
     const { name } = formData;
